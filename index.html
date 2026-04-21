@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Logistics Company — Международные грузоперевозки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ec;
+  --bg2: #edeade;
+  --dark: #14140f;
+  --mid: #2c2c22;
+  --green: #1a3a2a;
+  --green2: #2a5a40;
+  --lime: #b8d44a;
+  --lime2: #cce054;
+  --text: #2c2c22;
+  --muted: #8a8a78;
+  --white: #ffffff;
+  --border: #d8d4c8;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
+  padding: 28px 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: padding 0.4s, background 0.4s, border-bottom 0.4s;
+}
+nav.scrolled {
+  padding: 16px 64px;
+  background: rgba(245,242,236,0.96);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.nav-logo-icon {
+  width: 38px; height: 38px;
+  background: var(--green);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.nav-logo-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--dark);
+  line-height: 1.1;
+}
+.nav-logo-text span { display: block; font-size: 11px; font-family: 'DM Sans', sans-serif; color: var(--muted); font-style: italic; letter-spacing: 0.5px; }
+.nav-center {
+  display: flex; gap: 36px; list-style: none;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 10px 28px;
+}
+.nav-center a {
+  color: var(--muted); text-decoration: none;
+  font-size: 14px; font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-center a:hover { color: var(--dark); }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-tel {
+  font-size: 14px; color: var(--dark); font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-tel:hover { color: var(--green2); }
+.btn-nav {
+  background: var(--green);
+  color: var(--white);
+  padding: 11px 24px; border-radius: 100px;
+  font-size: 14px; font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-nav:hover { background: var(--green2); transform: translateY(-1px); }
+
+/* HAMBURGER */
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 300; }
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); transition: all 0.3s; border-radius: 2px; }
+
+/* MOBILE MENU */
+.mobile-menu {
+  display: none; position: fixed; inset: 0;
+  background: var(--green);
+  flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+  z-index: 250;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px; color: var(--white); text-decoration: none;
+  transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--lime); }
+.mobile-close {
+  position: absolute; top: 28px; right: 28px;
+  color: var(--white); font-size: 28px; cursor: pointer;
+  background: none; border: none;
+}
+
+/* ─── HERO ────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 420px;
+  gap: 0; align-items: stretch;
+  padding-top: 100px;
+  overflow: hidden;
+}
+.hero-left {
+  padding: 80px 64px 80px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 100px; padding: 8px 16px;
+  font-size: 12px; color: var(--muted); letter-spacing: 0.5px;
+  margin-bottom: 36px; width: fit-content;
+  opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards;
+}
+.hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime2); animation: pulse 2s infinite; }
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(52px, 6.5vw, 96px);
+  line-height: 1.0;
+  color: var(--dark);
+  opacity: 0; animation: fadeUp 0.7s ease 0.25s forwards;
+}
+h1 em { font-style: italic; color: var(--green2); }
+.hero-sub {
+  margin-top: 28px;
+  font-size: 17px; color: var(--muted); line-height: 1.7;
+  max-width: 460px;
+  opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards;
+}
+.hero-btns {
+  margin-top: 44px; display: flex; gap: 14px; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.7s ease 0.55s forwards;
+}
+.btn-primary {
+  background: var(--green);
+  color: var(--white);
+  padding: 16px 36px; border-radius: 100px;
+  font-size: 15px; font-weight: 500;
+  text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover { background: var(--green2); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(26,58,42,0.2); }
+.btn-ghost {
+  border: 1.5px solid var(--border);
+  color: var(--dark);
+  padding: 16px 36px; border-radius: 100px;
+  font-size: 15px; font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-ghost:hover { border-color: var(--green2); background: var(--white); }
+.hero-trust {
+  margin-top: 56px; display: flex; align-items: center; gap: 24px;
+  opacity: 0; animation: fadeUp 0.7s ease 0.7s forwards;
+}
+.hero-stars { color: var(--lime2); font-size: 16px; letter-spacing: 2px; }
+.hero-trust-text { font-size: 13px; color: var(--muted); }
+.hero-trust-text strong { color: var(--dark); }
+.hero-divider { width: 1px; height: 32px; background: var(--border); }
+
+.hero-right {
+  background: var(--green);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 60px 48px;
+  position: relative; overflow: hidden;
+}
+.hero-right-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(184,212,74,0.15), transparent 60%),
+              radial-gradient(circle at 80% 80%, rgba(184,212,74,0.08), transparent 50%);
+}
+.hero-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 28px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(8px);
+  opacity: 0; animation: fadeUp 0.7s ease 0.5s forwards;
+}
+.hero-card-label { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.hero-card-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 42px; color: var(--lime2); line-height: 1;
+}
+.hero-card-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+.hero-cards-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  opacity: 0; animation: fadeUp 0.7s ease 0.65s forwards;
+}
+.hero-card-sm {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 20px;
+}
+.hero-card-sm .val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px; color: var(--white); line-height: 1;
+}
+.hero-card-sm .lbl { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+.hero-right-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px; color: rgba(255,255,255,0.9);
+  margin-bottom: 28px; position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp 0.7s ease 0.35s forwards;
+}
+.hero-right-title em { color: var(--lime2); }
+
+/* ─── MARQUEE ─────────────────────────── */
+.marquee-wrap {
+  background: var(--dark); padding: 18px 0;
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex; white-space: nowrap;
+  animation: marquee 22s linear infinite;
+}
+.marquee-item {
+  flex-shrink: 0; padding: 0 48px;
+  font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 48px;
+}
+.marquee-item::after { content: '✦'; color: var(--lime2); }
+
+/* ─── SERVICES ─────────────────────────── */
+#services { padding: 110px 64px; background: var(--bg); }
+.section-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--green2); font-weight: 600;
+  margin-bottom: 20px;
+}
+h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(40px, 5vw, 68px);
+  color: var(--dark); line-height: 1.05;
+  margin-bottom: 16px;
+}
+.section-desc { font-size: 16px; color: var(--muted); max-width: 480px; line-height: 1.7; margin-bottom: 64px; }
+
+.services-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--border); border-radius: 20px; overflow: hidden; }
+.svc {
+  background: var(--bg);
+  padding: 52px 48px;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.svc:hover { background: var(--green); }
+.svc-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 80px; color: var(--border);
+  line-height: 1; position: absolute;
+  top: 24px; right: 32px;
+  transition: color 0.3s;
+}
+.svc:hover .svc-number { color: rgba(184,212,74,0.2); }
+.svc-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 24px;
+  transition: background 0.3s, border-color 0.3s;
+}
+.svc:hover .svc-icon { background: rgba(184,212,74,0.15); border-color: rgba(184,212,74,0.3); }
+.svc-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px; color: var(--dark); margin-bottom: 12px;
+  transition: color 0.3s;
+}
+.svc:hover .svc-title { color: var(--white); }
+.svc-text { font-size: 14px; color: var(--muted); line-height: 1.7; transition: color 0.3s; }
+.svc:hover .svc-text { color: rgba(255,255,255,0.6); }
+.svc-arrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 24px; font-size: 13px; color: var(--green2); font-weight: 500;
+  transition: gap 0.2s, color 0.3s;
+}
+.svc:hover .svc-arrow { gap: 10px; color: var(--lime2); }
+
+/* ─── ABOUT ─────────────────────────── */
+#about { padding: 110px 64px; background: var(--bg2); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.about-visual {
+  position: relative; height: 540px;
+}
+.about-img-main {
+  position: absolute; top: 0; left: 0; right: 80px; bottom: 80px;
+  background: var(--green); border-radius: 20px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.about-img-main::before {
+  content: '🚚';
+  font-size: 80px;
+  opacity: 0.15;
+}
+.about-img-main-pattern {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 0, transparent 50%);
+  background-size: 20px 20px;
+}
+.about-img-label {
+  position: absolute; bottom: 28px; left: 28px;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+  border-radius: 12px; padding: 16px 20px;
+  color: var(--white);
+}
+.about-img-label .big { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--lime2); }
+.about-img-label .small { font-size: 12px; color: rgba(255,255,255,0.6); }
+.about-img-float {
+  position: absolute; bottom: 0; right: 0;
+  width: 200px; height: 200px;
+  background: var(--lime);
+  border-radius: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+}
+.about-img-float .big { font-family: 'DM Serif Display', serif; font-size: 52px; color: var(--dark); }
+.about-img-float .small { font-size: 13px; color: var(--dark); font-weight: 500; }
+
+.about-content { display: flex; flex-direction: column; gap: 0; }
+.about-list { display: flex; flex-direction: column; gap: 0; margin-top: 40px; }
+.about-item {
+  display: flex; align-items: flex-start; gap: 20px;
+  padding: 24px 0; border-bottom: 1px solid var(--border);
+  transition: padding-left 0.3s;
+}
+.about-item:last-child { border-bottom: none; }
+.about-item:hover { padding-left: 8px; }
+.about-item-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--lime2);
+  flex-shrink: 0; padding-top: 2px;
+}
+.about-item-title { font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+.about-item-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ─── REVIEWS ─────────────────────────── */
+#reviews { padding: 110px 64px; background: var(--bg); }
+.reviews-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 56px; flex-wrap: wrap; gap: 24px; }
+.rating-big {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--green); border-radius: 20px;
+  padding: 24px 32px;
+}
+.rating-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 56px; color: var(--lime2); line-height: 1;
+}
+.rating-detail { display: flex; flex-direction: column; gap: 4px; }
+.rating-stars { color: var(--lime2); font-size: 18px; }
+.rating-source { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+.reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.review {
+  background: var(--white);
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 36px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.review:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(26,58,42,0.08); }
+.review-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.review-stars-sm { color: var(--lime2); font-size: 14px; letter-spacing: 1px; }
+.review-platform { font-size: 11px; color: var(--muted); }
+.review-body { font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 24px; font-style: italic; }
+.review-footer { display: flex; align-items: center; gap: 12px; }
+.review-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--green); display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: var(--white);
+  flex-shrink: 0;
+}
+.review-name { font-weight: 600; font-size: 14px; color: var(--dark); }
+.review-date { font-size: 12px; color: var(--muted); }
+
+/* ─── CONTACT ─────────────────────────── */
+#contact { padding: 110px 64px; background: var(--green); position: relative; overflow: hidden; }
+#contact::before {
+  content: '';
+  position: absolute; top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(184,212,74,0.12), transparent 70%);
+  pointer-events: none;
+}
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; position: relative; z-index: 1; }
+.contact-left h2 { color: var(--white); }
+.contact-left .section-eyebrow { color: var(--lime2); }
+.contact-left p { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 48px; }
+.contact-channels { display: flex; flex-direction: column; gap: 14px; }
+.channel {
+  display: flex; align-items: center; gap: 16px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 18px 22px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.channel:hover { background: rgba(255,255,255,0.1); transform: translateX(4px); }
+.channel-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(184,212,74,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.channel-label { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; }
+.channel-val { color: var(--white); font-weight: 500; margin-top: 2px; }
+
+.contact-form {
+  background: var(--bg); border-radius: 24px;
+  padding: 48px;
+}
+.contact-form h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px; color: var(--dark); margin-bottom: 32px;
+}
+.form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.form-field label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--dark);
+  outline: none; transition: border-color 0.2s;
+  resize: none;
+  -webkit-appearance: none; appearance: none;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color: var(--green2); background: var(--white); }
+.form-field textarea { min-height: 100px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.btn-submit {
+  width: 100%; background: var(--green);
+  color: var(--white); border: none;
+  padding: 16px; border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 8px;
+}
+.btn-submit:hover { background: var(--green2); transform: translateY(-1px); }
+
+/* ─── FOOTER ─────────────────────────── */
+footer {
+  background: var(--dark); padding: 60px 64px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;
+}
+.footer-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--white);
+}
+.footer-logo span { color: var(--lime2); }
+.footer-nav { display: flex; gap: 28px; }
+.footer-nav a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+.footer-nav a:hover { color: var(--white); }
+.footer-bottom {
+  width: 100%; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.footer-copy { font-size: 13px; color: rgba(255,255,255,0.3); }
+.footer-address { font-size: 13px; color: rgba(255,255,255,0.3); }
+
+/* ─── SCROLL REVEAL ─────────────────── */
+.reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── ANIMATIONS ─────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ─── RESPONSIVE ──────────────────────── */
+@media (max-width: 960px) {
+  nav { padding: 18px 24px; }
+  nav.scrolled { padding: 14px 24px; }
+  .nav-center, .nav-right { display: none; }
+  .hamburger { display: flex; }
+  .hero { grid-template-columns: 1fr; padding-top: 80px; }
+  .hero-left { padding: 48px 24px; }
+  .hero-right { display: none; }
+  #services, #about, #reviews, #contact { padding: 70px 24px; }
+  .services-layout { grid-template-columns: 1fr; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-visual { display: none; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .reviews-header { flex-direction: column; align-items: flex-start; }
+  .contact-grid { grid-template-columns: 1fr; }
+  footer { padding: 40px 24px; flex-direction: column; align-items: flex-start; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">📦</div>
+    <div class="nav-logo-text">
+      Smart Logistics
+      <span>Company · Бишкек</span>
+    </div>
+  </a>
+  <ul class="nav-center">
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#about">О нас</a></li>
+    <li><a href="#reviews">Отзывы</a></li>
+    <li><a href="#contact">Контакты</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="tel:+996707317717" class="nav-tel">+996 707 317 717</a>
+    <a href="#contact" class="btn-nav">Заявка →</a>
+  </div>
+  <div class="hamburger" id="ham"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mob">
+  <button class="mobile-close" onclick="closeMob()">✕</button>
+  <a href="#services" onclick="closeMob()">Услуги</a>
+  <a href="#about" onclick="closeMob()">О нас</a>
+  <a href="#reviews" onclick="closeMob()">Отзывы</a>
+  <a href="#contact" onclick="closeMob()">Контакты</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><div class="hero-badge-dot"></div> Международные грузоперевозки · Бишкек</div>
+    <h1>Умная<br><em>логистика</em><br>для бизнеса</h1>
+    <p class="hero-sub">Smart Logistics Company — ваш надёжный партнёр по международным грузоперевозкам. Доставляем грузы любого объёма точно в срок.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">Рассчитать доставку →</a>
+      <a href="#services" class="btn-ghost">Наши услуги</a>
+    </div>
+    <div class="hero-trust">
+      <div>
+        <div class="hero-stars">★★★★★</div>
+        <div class="hero-trust-text"><strong>5.0</strong> рейтинг на 2ГИС</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-trust-text"><strong>11</strong> оценок клиентов</div>
+      <div class="hero-divider"></div>
+      <div class="hero-trust-text">Работаем <strong>по звонку</strong></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-bg"></div>
+    <div class="hero-right-title">Ваши грузы <em>под контролем</em></div>
+    <div class="hero-card">
+      <div class="hero-card-label">Рейтинг компании</div>
+      <div class="hero-card-val">5.0 ★</div>
+      <div class="hero-card-sub">по оценкам клиентов на 2ГИС</div>
+    </div>
+    <div class="hero-cards-row">
+      <div class="hero-card-sm">
+        <div class="val">11</div>
+        <div class="lbl">Отзывов</div>
+      </div>
+      <div class="hero-card-sm">
+        <div class="val">24/7</div>
+        <div class="lbl">Поддержка</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Тралы</div>
+    <div class="marquee-item">Автовозы</div>
+    <div class="marquee-item">Контейнеры</div>
+    <div class="marquee-item">Авиа</div>
+    <div class="marquee-item">Таможня</div>
+    <div class="marquee-item">Склад</div>
+    <div class="marquee-item">СНГ</div>
+    <div class="marquee-item">Китай</div>
+    <div class="marquee-item">Тралы</div>
+    <div class="marquee-item">Автовозы</div>
+    <div class="marquee-item">Контейнеры</div>
+    <div class="marquee-item">Авиа</div>
+    <div class="marquee-item">Таможня</div>
+    <div class="marquee-item">Склад</div>
+    <div class="marquee-item">СНГ</div>
+    <div class="marquee-item">Китай</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-eyebrow">✦ Что мы предлагаем</div>
+  <h2>Наши услуги</h2>
+  <p class="section-desc">Полный спектр логистических решений — от небольших отправлений до крупных международных поставок.</p>
+  <div class="services-layout reveal">
+    <div class="svc">
+      <div class="svc-number">01</div>
+      <div class="svc-icon">🚛</div>
+      <div class="svc-title">Тралы и автовозы</div>
+      <p class="svc-text">Перевозка автомобилей, спецтехники и негабаритных грузов по всей Центральной Азии и СНГ.</p>
+      <div class="svc-arrow">Подробнее →</div>
+    </div>
+    <div class="svc">
+      <div class="svc-number">02</div>
+      <div class="svc-icon">✈️</div>
+      <div class="svc-title">Авиаперевозки</div>
+      <p class="svc-text">Срочные отправки по всему миру. Прямые и транзитные рейсы с отслеживанием в реальном времени.</p>
+      <div class="svc-arrow">Подробнее →</div>
+    </div>
+    <div class="svc">
+      <div class="svc-number">03</div>
+      <div class="svc-icon">🚢</div>
+      <div class="svc-title">Морские контейнеры</div>
+      <p class="svc-text">FCL и LCL отправки из Китая, Кореи, Турции и Европы. Работаем с крупнейшими морскими линиями.</p>
+      <div class="svc-arrow">Подробнее →</div>
+    </div>
+    <div class="svc">
+      <div class="svc-number">04</div>
+      <div class="svc-icon">📋</div>
+      <div class="svc-title">Таможенное оформление</div>
+      <p class="svc-text">Декларирование, сертификация, расчёт пошлин. Работаем с любыми видами грузов и товарных позиций.</p>
+      <div class="svc-arrow">Подробнее →</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-img-main">
+        <div class="about-img-main-pattern"></div>
+        <div class="about-img-label">
+          <div class="big">5.0</div>
+          <div class="small">Рейтинг на 2ГИС</div>
+        </div>
+      </div>
+      <div class="about-img-float">
+        <div class="big">7</div>
+        <div class="small">отзывов</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-eyebrow">✦ Почему выбирают нас</div>
+      <h2>Надёжность в каждой<br>поставке</h2>
+      <ul class="about-list reveal">
+        <li class="about-item">
+          <div class="about-item-num">01</div>
+          <div>
+            <div class="about-item-title">Международный опыт</div>
+            <p class="about-item-text">Доставляем грузы из Китая, России, Казахстана и Европы. Знаем таможенные процедуры каждой страны.</p>
+          </div>
+        </li>
+        <li class="about-item">
+          <div class="about-item-num">02</div>
+          <div>
+            <div class="about-item-title">Персональный подход</div>
+            <p class="about-item-text">Каждый клиент получает личного менеджера. Работаем по предварительному звонку — удобно и без очередей.</p>
+          </div>
+        </li>
+        <li class="about-item">
+          <div class="about-item-num">03</div>
+          <div>
+            <div class="about-item-title">Тралы и автовозы</div>
+            <p class="about-item-text">Собственный парк техники для перевозки крупногабаритных грузов и автомобилей по всему региону.</p>
+          </div>
+        </li>
+        <li class="about-item">
+          <div class="about-item-num">04</div>
+          <div>
+            <div class="about-item-title">Прозрачные условия</div>
+            <p class="about-item-text">Честные цены без скрытых доплат. Полная стоимость фиксируется до отправки груза.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reviews-header reveal">
+    <div>
+      <div class="section-eyebrow">✦ Что говорят клиенты</div>
+      <h2>Отзывы</h2>
+    </div>
+    <div class="rating-big">
+      <div class="rating-num">5.0</div>
+      <div class="rating-detail">
+        <div class="rating-stars">★★★★★</div>
+        <div style="color:rgba(255,255,255,0.7);font-size:13px;">11 оценок</div>
+        <div class="rating-source">2ГИС · Бишкек</div>
+      </div>
+    </div>
+  </div>
+  <div class="reviews-grid reveal">
+    <div class="review">
+      <div class="review-top">
+        <div class="review-stars-sm">★★★★★</div>
+        <div class="review-platform">2ГИС</div>
+      </div>
+      <p class="review-body">«Обращались по доставке техники из России. Всё прошло быстро и чётко — груз пришёл раньше срока. Рекомендую!»</p>
+      <div class="review-footer">
+        <div class="review-avatar">А</div>
+        <div>
+          <div class="review-name">Азамат Б.</div>
+          <div class="review-date">Клиент компании</div>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="review-top">
+        <div class="review-stars-sm">★★★★★</div>
+        <div class="review-platform">2ГИС</div>
+      </div>
+      <p class="review-body">«Профессиональная команда. Помогли с таможенным оформлением контейнера из Китая, всё объяснили и сопроводили до конца.»</p>
+      <div class="review-footer">
+        <div class="review-avatar">Д</div>
+        <div>
+          <div class="review-name">Динара К.</div>
+          <div class="review-date">Постоянный клиент</div>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="review-top">
+        <div class="review-stars-sm">★★★★★</div>
+        <div class="review-platform">2ГИС</div>
+      </div>
+      <p class="review-body">«Отличный сервис! Связывался через WhatsApp — ответили моментально. Груз доставлен в целости, цены адекватные.»</p>
+      <div class="review-footer">
+        <div class="review-avatar">Т</div>
+        <div>
+          <div class="review-name">Тимур Э.</div>
+          <div class="review-date">Клиент компании</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-left reveal">
+      <div class="section-eyebrow">✦ Свяжитесь с нами</div>
+      <h2>Обсудим ваш груз</h2>
+      <p>Готовы принять заявку прямо сейчас. Выберите удобный способ связи или заполните форму.</p>
+      <div class="contact-channels">
+        <a href="tel:+996707317717" class="channel">
+          <div class="channel-icon">📞</div>
+          <div><div class="channel-label">Телефон</div><div class="channel-val">+996 707 317 717</div></div>
+        </a>
+        <a href="https://wa.me/996707317717" target="_blank" class="channel">
+          <div class="channel-icon">💬</div>
+          <div><div class="channel-label">WhatsApp</div><div class="channel-val">+996 707 317 717</div></div>
+        </a>
+        <a href="https://t.me/+996550970077" target="_blank" class="channel">
+          <div class="channel-icon">✈️</div>
+          <div><div class="channel-label">Telegram</div><div class="channel-val">+996 550 970 077</div></div>
+        </a>
+        <a href="https://instagram.com/smart_logisticsc" target="_blank" class="channel">
+          <div class="channel-icon">📸</div>
+          <div><div class="channel-label">Instagram</div><div class="channel-val">@smart_logisticsc</div></div>
+        </a>
+        <div class="channel" style="cursor:default;">
+          <div class="channel-icon">📍</div>
+          <div><div class="channel-label">Адрес</div><div class="channel-val">ул. Панфилова 164а, 1 этаж, Бишкек</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <h3>Оставить заявку</h3>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Имя</label>
+          <input type="text" placeholder="Ваше имя">
+        </div>
+        <div class="form-field">
+          <label>Телефон</label>
+          <input type="tel" placeholder="+996">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Откуда</label>
+          <input type="text" placeholder="Город / страна">
+        </div>
+        <div class="form-field">
+          <label>Куда</label>
+          <input type="text" placeholder="Город / страна">
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Тип услуги</label>
+        <select>
+          <option value="">Выберите услугу...</option>
+          <option>Тралы / Автовозы</option>
+          <option>Авиаперевозки</option>
+          <option>Морские контейнеры</option>
+          <option>Таможенное оформление</option>
+          <option>Другое</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Описание груза</label>
+        <textarea placeholder="Вес, габариты, тип товара..."></textarea>
+      </div>
+      <button class="btn-submit" id="submitBtn">Отправить заявку →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Smart <span>Logistics</span> Company</div>
+  <div class="footer-nav">
+    <a href="#services">Услуги</a>
+    <a href="#about">О нас</a>
+    <a href="#reviews">Отзывы</a>
+    <a href="#contact">Контакты</a>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Smart Logistics Company. Все права защищены.</div>
+    <div class="footer-address">📍 ул. Панфилова 164а, Бишкек, Кыргызстан</div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', scrollY > 60);
+  });
+
+  // Mobile menu
+  document.getElementById('ham').addEventListener('click', () => {
+    document.getElementById('mob').classList.add('open');
+  });
+  function closeMob() { document.getElementById('mob').classList.remove('open'); }
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Stagger service cards
+  document.querySelectorAll('.svc').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.09}s`;
+    el.classList.add('reveal');
+    obs.observe(el);
+  });
+
+  // Stagger reviews
+  document.querySelectorAll('.review').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.1}s`;
+    el.classList.add('reveal');
+    obs.observe(el);
+  });
+
+  // Stagger channels
+  document.querySelectorAll('.channel').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.07}s`;
+    el.classList.add('reveal');
+    obs.observe(el);
+  });
+
+  // Form submit
+  document.getElementById('submitBtn').addEventListener('click', function() {
+    this.textContent = '✓ Заявка принята!';
+    this.style.background = '#2ecc71';
+    setTimeout(() => { this.textContent = 'Отправить заявку →'; this.style.background = ''; }, 3000);
+  });
+</script>
+</body>
+</html>
